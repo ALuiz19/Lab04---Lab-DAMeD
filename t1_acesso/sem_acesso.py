@@ -1,10 +1,16 @@
 # sem_acesso.py
 import json
+from pathlib import Path
+
 import requests
+
+
+BASE_DIR = Path(__file__).resolve().parent
+
 
 def ler_configuracao(origem: str):
     if origem == "local":
-        with open("config.json") as f:
+        with open(BASE_DIR / "config.json", encoding="utf-8") as f:
             return json.load(f)
     elif origem == "http":
         resp = requests.get("http://config-srv/config")

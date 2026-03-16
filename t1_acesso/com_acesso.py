@@ -1,22 +1,28 @@
 # com_acesso.py
 import json
 import os
+from pathlib import Path
+
 from dotenv import load_dotenv
+
 load_dotenv()
 
 import requests
 from abc import ABC, abstractmethod
+
+
+BASE_DIR = Path(__file__).resolve().parent
 
 class ConfigRepository(ABC):
     @abstractmethod
     def get(self, key: str) -> dict: ...
 
 class LocalConfig(ConfigRepository):
-    def __init__(self, path: str = "config.json"):
+    def __init__(self, path: str = str(BASE_DIR / "config.json")):
         self._path = path
 
     def get(self, key: str) -> dict:
-        with open(self._path) as f:
+        with open(self._path, encoding="utf-8") as f:
             return json.load(f)[key]
 
 class RemoteConfig(ConfigRepository):
